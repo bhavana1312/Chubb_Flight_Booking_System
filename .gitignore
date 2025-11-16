@@ -1,33 +1,56 @@
-HELP.md
+### Maven ###
 target/
-.mvn/wrapper/maven-wrapper.jar
-!*/src/main/*/target/
-!*/src/test/*/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Spring Boot ###
+*.log
+spring.log
+*.pid
+*.pid.lock
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
 
 ### IntelliJ IDEA ###
-.idea
-*.iws
+.idea/
 *.iml
 *.ipr
+*.iws
+out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!*/src/main/*/build/
-!*/src/test/*/build/
+### Eclipse / STS ###
+.settings/
+.project
+.classpath
+.factorypath
+.springBeans
+.mymetadata
+.apt_generated/
+bin/
+tmp/
 
 ### VS Code ###
 .vscode/
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+
+### Application Secrets ###
+*.env
+application-*.yml
+application-*.properties
