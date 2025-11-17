@@ -19,7 +19,7 @@ class SearchControllerTest {
 
     @Autowired
     private MockMvc mvc;
-    @MockBean
+	@MockBean
     private SearchService searchService;
     @Autowired
     private ObjectMapper mapper;

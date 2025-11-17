@@ -29,7 +29,7 @@ public class BookingController {
 
     @GetMapping("/ticket/{pnr}")
     public ResponseEntity<BookingResponse> getTicket(@PathVariable String pnr) {
-        return ResponseEntity.ok(bookingService.getByPnr(pnr));
+		return ResponseEntity.ok(bookingService.getByPnr(pnr));
     }
 
     @GetMapping("/booking/history/{emailId}")

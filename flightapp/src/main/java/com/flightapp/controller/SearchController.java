@@ -16,13 +16,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SearchController {
 
-    private final SearchService searchService;
+	private final SearchService searchService;
 
-    @PostMapping("/search")
-    public ResponseEntity<Map<String, List<SearchResultDTO>>> search(
-            @Valid @RequestBody SearchRequest req) {
+	@PostMapping("/search")
+	public ResponseEntity<Map<String, List<SearchResultDTO>>> search(@Valid @RequestBody SearchRequest req) {
 
-        List<SearchResultDTO> results = searchService.search(req);
-        return ResponseEntity.ok(Map.of("results", results));
-    }
+		List<SearchResultDTO> results = searchService.search(req);
+		return ResponseEntity.ok(Map.of("results", results));
+	}
 }

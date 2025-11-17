@@ -20,5 +20,3 @@ public class BookingRequest {
 	private PaymentDTO paymentInfo;
 	private String specialRequests;
 }
-
-

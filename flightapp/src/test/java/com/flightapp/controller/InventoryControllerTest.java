@@ -22,7 +22,7 @@ class InventoryControllerTest {
 
     @Autowired
     private MockMvc mvc;
-    @MockBean
+	@MockBean
     private InventoryService inventoryService;
     @Autowired
     private ObjectMapper mapper;

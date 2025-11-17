@@ -33,66 +33,66 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public BookingResponse book(Long flightId, BookingRequest req) {
 
-	    Inventory inv = inventoryRepository.findById(flightId)
-	            .orElseThrow(() -> new AppException("Flight not found"));
+		Inventory inv = inventoryRepository.findById(flightId).orElseThrow(() -> new AppException("Flight not found"));
 
-	    SeatClass sc = seatClassRepository.findByInventoryIdAndClassType(inv.getId(), req.getClassType());
-	    if (sc == null) throw new AppException("Class not available");
+		SeatClass sc = seatClassRepository.findByInventoryIdAndClassType(inv.getId(), req.getClassType());
+		if (sc == null)
+			throw new AppException("Class not available");
 
-	    if (sc.getAvailableSeats() < req.getSeatsToBook()) {
-	        throw new AppException("Seats unavailable");
-	    }
+		if (sc.getAvailableSeats() < req.getSeatsToBook()) {
+			throw new AppException("Seats unavailable");
+		}
 
-	    sc.setAvailableSeats(sc.getAvailableSeats() - req.getSeatsToBook());
-	    seatClassRepository.save(sc);
+		sc.setAvailableSeats(sc.getAvailableSeats() - req.getSeatsToBook());
+		seatClassRepository.save(sc);
 
-	    Booking booking = new Booking();
-	    booking.setInventory(inv);
-	    booking.setPnr(PnrUtil.generate());
-	    booking.setContactEmail(req.getEmail());
-	    booking.setContactName(req.getContactName());
-	    booking.setClassType(req.getClassType());
-	    booking.setSeatsBooked(req.getSeatsToBook());
+		Booking booking = new Booking();
+		booking.setInventory(inv);
+		booking.setPnr(PnrUtil.generate());
+		booking.setContactEmail(req.getEmail());
+		booking.setContactName(req.getContactName());
+		booking.setClassType(req.getClassType());
+		booking.setSeatsBooked(req.getSeatsToBook());
 
-	    double total = req.getPassengers().size() * sc.getPrice();
-	    booking.setTotalAmount(total);
+		double total = req.getPassengers().size() * sc.getPrice();
+		booking.setTotalAmount(total);
 
-	    booking.setStatus("BOOKED");
-	    booking.setTravelDate(inv.getDepartureDateTime().toLocalDate());
+		booking.setStatus("BOOKED");
+		booking.setTravelDate(inv.getDepartureDateTime().toLocalDate());
 
-	    List<Passenger> passengers = req.getPassengers().stream().map(pdto -> {
-	        Passenger p = new Passenger();
-	        p.setBooking(booking);
-	        p.setName(pdto.getName());
-	        p.setAge(pdto.getAge());
-	        p.setGender(pdto.getGender());
-	        p.setSeatNumber(pdto.getSeatNumber());
-	        p.setMeal(pdto.getMeal());
-	        return p;
-	    }).toList();
+		List<Passenger> passengers = req.getPassengers().stream().map(pdto -> {
+			Passenger p = new Passenger();
+			p.setBooking(booking);
+			p.setName(pdto.getName());
+			p.setAge(pdto.getAge());
+			p.setGender(pdto.getGender());
+			p.setSeatNumber(pdto.getSeatNumber());
+			p.setMeal(pdto.getMeal());
+			return p;
+		}).toList();
 
-	    booking.setPassengers(passengers);
+		booking.setPassengers(passengers);
 
-	    Booking saved = bookingRepository.save(booking);
+		Booking saved = bookingRepository.save(booking);
 
-	    BookingResponse resp = new BookingResponse();
-	    resp.setStatus(saved.getStatus());
-	    resp.setPnr(saved.getPnr());
-	    resp.setBookingId("BK-" + saved.getId());
-	    resp.setTotalAmount(saved.getTotalAmount());
+		BookingResponse resp = new BookingResponse();
+		resp.setStatus(saved.getStatus());
+		resp.setPnr(saved.getPnr());
+		resp.setBookingId("BK-" + saved.getId());
+		resp.setTotalAmount(saved.getTotalAmount());
 
-	    List<TicketInfo> tickets = saved.getPassengers().stream().map(p -> {
-	        TicketInfo t = new TicketInfo();
-	        t.setPassenger(p.getName());
-	        t.setSeat(p.getSeatNumber());
-	        t.setTicketId("TCK-" + p.getId());
-	        return t;
-	    }).toList();
+		List<TicketInfo> tickets = saved.getPassengers().stream().map(p -> {
+			TicketInfo t = new TicketInfo();
+			t.setPassenger(p.getName());
+			t.setSeat(p.getSeatNumber());
+			t.setTicketId("TCK-" + p.getId());
+			return t;
+		}).toList();
 
-	    resp.setTickets(tickets);
-	    resp.setDownloadUrl("/api/v1.0/flight/ticket/download/" + saved.getPnr());
+		resp.setTickets(tickets);
+		resp.setDownloadUrl("/api/v1.0/flight/ticket/download/" + saved.getPnr());
 
-	    return resp;
+		return resp;
 	}
 
 	public BookingResponse getByPnr(String pnr) {
@@ -142,7 +142,7 @@ public class BookingServiceImpl implements BookingService {
 		resp.setStatus("CANCELLED");
 		resp.setPnr(b.getPnr());
 		resp.setBookingId("BK-" + b.getId());
-		resp.setTotalAmount(b.getTotalAmount() * 0.95); 
+		resp.setTotalAmount(b.getTotalAmount() * 0.95);
 
 		return resp;
 	}

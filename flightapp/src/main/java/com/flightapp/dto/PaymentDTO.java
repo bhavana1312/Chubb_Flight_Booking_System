@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 
 @Data
 public class PaymentDTO {
-    @NotBlank
-    private String method;
+	@NotBlank
+	private String method;
 
-    private String transactionId;
-    private String cardLast4;
+	private String transactionId;
+	private String cardLast4;
 }

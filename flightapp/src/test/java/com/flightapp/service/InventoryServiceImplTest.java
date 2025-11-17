@@ -20,68 +20,70 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class InventoryServiceImplTest {
 
-    @Mock
-    private AirlineRepository airlineRepository;
+	@Mock
+	private AirlineRepository airlineRepository;
 
-    @Mock
-    private InventoryRepository inventoryRepository;
+	@Mock
+	private InventoryRepository inventoryRepository;
 
-    @Mock
-    private SeatClassRepository seatClassRepository;
+	@Mock
+	private SeatClassRepository seatClassRepository;
 
-    private InventoryServiceImpl inventoryService;
+	private InventoryServiceImpl inventoryService;
 
-    @BeforeEach
-    void setup() {
-        inventoryService = new InventoryServiceImpl(airlineRepository, inventoryRepository, seatClassRepository);
-    }
+	@BeforeEach
+	void setup() {
+		inventoryService = new InventoryServiceImpl(airlineRepository, inventoryRepository, seatClassRepository);
+	}
 
-    private InventoryRequest sampleRequest() {
-        InventoryRequest r = new InventoryRequest();
-        r.setAirlineCode("AI");
-        r.setFlightNumber("AI202");
-        r.setFrom("BLR");
-        r.setTo("DEL");
-        r.setDepartureDateTime(LocalDateTime.of(2025,12,20,9,30));
-        r.setArrivalDateTime(LocalDateTime.of(2025,12,20,11,45));
-        InventorySeatClassDTO sc = new InventorySeatClassDTO();
-        sc.setClassType("ECONOMY"); sc.setTotalSeats(150); sc.setPrice(4500.0);
-        r.setSeatClasses(List.of(sc));
-        return r;
-    }
+	private InventoryRequest sampleRequest() {
+		InventoryRequest r = new InventoryRequest();
+		r.setAirlineCode("AI");
+		r.setFlightNumber("AI202");
+		r.setFrom("BLR");
+		r.setTo("DEL");
+		r.setDepartureDateTime(LocalDateTime.of(2025, 12, 20, 9, 30));
+		r.setArrivalDateTime(LocalDateTime.of(2025, 12, 20, 11, 45));
+		InventorySeatClassDTO sc = new InventorySeatClassDTO();
+		sc.setClassType("ECONOMY");
+		sc.setTotalSeats(150);
+		sc.setPrice(4500.0);
+		r.setSeatClasses(List.of(sc));
+		return r;
+	}
 
-    @Test
-    void testAddInventoryCreatesAirlineWhenMissing() {
-        when(airlineRepository.findByCode("AI")).thenReturn(null);
-        when(airlineRepository.save(any(Airline.class))).thenAnswer(a -> {
-            Airline al = a.getArgument(0);
-            al.setId(5L);
-            return al;
-        });
-        when(inventoryRepository.save(any(Inventory.class))).thenAnswer(i -> {
-            Inventory inv = i.getArgument(0);
-            inv.setId(10L);
-            return inv;
-        });
+	@Test
+	void testAddInventoryCreatesAirlineWhenMissing() {
+		when(airlineRepository.findByCode("AI")).thenReturn(null);
+		when(airlineRepository.save(any(Airline.class))).thenAnswer(a -> {
+			Airline al = a.getArgument(0);
+			al.setId(5L);
+			return al;
+		});
+		when(inventoryRepository.save(any(Inventory.class))).thenAnswer(i -> {
+			Inventory inv = i.getArgument(0);
+			inv.setId(10L);
+			return inv;
+		});
 
-        Long id = inventoryService.addInventory(sampleRequest());
-        assertEquals(10L, id);
-        verify(inventoryRepository, times(1)).save(any(Inventory.class));
-    }
+		Long id = inventoryService.addInventory(sampleRequest());
+		assertEquals(10L, id);
+		verify(inventoryRepository, times(1)).save(any(Inventory.class));
+	}
 
-    @Test
-    void testAddInventoryUsesExistingAirline() {
-        Airline existing = new Airline();
-        existing.setId(3L);
-        when(airlineRepository.findByCode("AI")).thenReturn(existing);
-        when(inventoryRepository.save(any(Inventory.class))).thenAnswer(i -> {
-            Inventory inv = i.getArgument(0);
-            inv.setId(11L);
-            return inv;
-        });
+	@Test
+	void testAddInventoryUsesExistingAirline() {
+		Airline existing = new Airline();
+		existing.setId(3L);
+		when(airlineRepository.findByCode("AI")).thenReturn(existing);
+		when(inventoryRepository.save(any(Inventory.class))).thenAnswer(i -> {
+			Inventory inv = i.getArgument(0);
+			inv.setId(11L);
+			return inv;
+		});
 
-        Long id = inventoryService.addInventory(sampleRequest());
-        assertEquals(11L, id);
-        verify(airlineRepository, never()).save(any(Airline.class));
-    }
+		Long id = inventoryService.addInventory(sampleRequest());
+		assertEquals(11L, id);
+		verify(airlineRepository, never()).save(any(Airline.class));
+	}
 }

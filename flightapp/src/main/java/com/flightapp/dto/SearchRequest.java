@@ -20,8 +20,8 @@ public class SearchRequest {
 
 	private LocalDate returnDate;
 	private String tripType;
-	private Integer passengers; 
-	private String classType; 
+	private Integer passengers;
+	private String classType;
 	private Filter filters;
 }
 

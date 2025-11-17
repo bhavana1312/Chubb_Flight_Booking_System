@@ -46,8 +46,6 @@ class BookingServiceImplTest {
 	@Mock
 	private BookingRepository bookingRepository;
 
-	// IMPORTANT: BookingServiceImpl constructor order is (InventoryRepository,
-	// SeatClassRepository, BookingRepository)
 	private BookingServiceImpl bookingService;
 
 	@BeforeEach
@@ -110,8 +108,6 @@ class BookingServiceImplTest {
 		sc.setInventory(inv);
 		when(seatClassRepository.findByInventoryIdAndClassType(inv.getId(), "ECONOMY")).thenReturn(sc);
 
-		// ensure bookingRepository.save returns booking populated with an id and
-		// passenger ids
 		when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> {
 			Booking b = invocation.getArgument(0);
 			b.setId(100L);
@@ -156,7 +152,7 @@ class BookingServiceImplTest {
 		Inventory inv = sampleInventory();
 		when(inventoryRepository.findById(1L)).thenReturn(Optional.of(inv));
 		SeatClass sc = sampleSeatClass();
-		sc.setAvailableSeats(1); // less than requested
+		sc.setAvailableSeats(1);
 		when(seatClassRepository.findByInventoryIdAndClassType(inv.getId(), "ECONOMY")).thenReturn(sc);
 		BookingRequest req = sampleBookingRequest();
 		RuntimeException ex = assertThrows(RuntimeException.class, () -> bookingService.book(1L, req));
@@ -215,7 +211,7 @@ class BookingServiceImplTest {
 	void testCancelTooLate() {
 		Booking b = new Booking();
 		b.setPnr("PNR2");
-		b.setTravelDate(LocalDate.now().plusDays(0)); // today
+		b.setTravelDate(LocalDate.now().plusDays(0));
 		when(bookingRepository.findByPnr("PNR2")).thenReturn(b);
 		RuntimeException ex = assertThrows(RuntimeException.class, () -> bookingService.cancel("PNR2"));
 		assertTrue(ex.getMessage().contains("Cannot cancel within 24 hours"));

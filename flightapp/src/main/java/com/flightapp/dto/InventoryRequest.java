@@ -23,4 +23,3 @@ public class InventoryRequest {
 	private List<InventorySeatClassDTO> seatClasses;
 	private List<String> mealOptions;
 }
-

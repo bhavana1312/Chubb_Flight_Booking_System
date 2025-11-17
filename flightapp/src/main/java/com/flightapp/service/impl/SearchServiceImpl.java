@@ -42,7 +42,7 @@ public class SearchServiceImpl implements SearchService {
 
 			List<ClassOptionDTO> classes = i.getSeatClasses().stream().filter(sc -> {
 				if (req.getClassType() == null || req.getClassType().isBlank()) {
-					return true; 
+					return true;
 				}
 				return sc.getClassType().equalsIgnoreCase(req.getClassType());
 			}).map(sc -> {
