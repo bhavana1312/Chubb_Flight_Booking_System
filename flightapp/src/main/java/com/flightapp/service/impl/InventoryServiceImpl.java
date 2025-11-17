@@ -1,14 +1,20 @@
 package com.flightapp.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.flightapp.service.InventoryService;
+
 import com.flightapp.dto.InventoryRequest;
-import com.flightapp.entity.*;
-import com.flightapp.repository.*;
+import com.flightapp.entity.Airline;
+import com.flightapp.entity.Inventory;
+import com.flightapp.entity.SeatClass;
+import com.flightapp.repository.AirlineRepository;
+import com.flightapp.repository.InventoryRepository;
+import com.flightapp.repository.SeatClassRepository;
+import com.flightapp.service.InventoryService;
+
 import lombok.RequiredArgsConstructor;
-import java.util.stream.Collectors;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +50,7 @@ public class InventoryServiceImpl implements InventoryService {
 			s.setMealsIncluded(Boolean.TRUE.equals(sc.getMealsIncluded()));
 			s.setInventory(inv);
 			return s;
-		}).collect(Collectors.toList());
+		}).toList();
 		inv.setSeatClasses(seatClasses);
 		Inventory saved = inventoryRepository.save(inv);
 		return saved.getId();

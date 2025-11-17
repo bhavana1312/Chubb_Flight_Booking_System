@@ -1,16 +1,20 @@
 package com.flightapp.service.impl;
 
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
-import com.flightapp.service.SearchService;
-import com.flightapp.dto.*;
-import com.flightapp.repository.InventoryRepository;
-import com.flightapp.entity.Inventory;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.flightapp.dto.ClassOptionDTO;
+import com.flightapp.dto.SearchRequest;
+import com.flightapp.dto.SearchResultDTO;
+import com.flightapp.entity.Inventory;
+import com.flightapp.repository.InventoryRepository;
+import com.flightapp.service.SearchService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +42,7 @@ public class SearchServiceImpl implements SearchService {
 
 			List<ClassOptionDTO> classes = i.getSeatClasses().stream().filter(sc -> {
 				if (req.getClassType() == null || req.getClassType().isBlank()) {
-					return true; // show all
+					return true; 
 				}
 				return sc.getClassType().equalsIgnoreCase(req.getClassType());
 			}).map(sc -> {
@@ -47,11 +51,11 @@ public class SearchServiceImpl implements SearchService {
 				dto.setAvailableSeats(sc.getAvailableSeats());
 				dto.setPrice(sc.getPrice());
 				return dto;
-			}).collect(Collectors.toList());
+			}).toList();
 
 			r.setClasses(classes);
 			return r;
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 }

@@ -18,11 +18,10 @@ public class SearchRequest {
 	@NotNull
 	private LocalDate departureDate;
 
-	// Optional fields
 	private LocalDate returnDate;
-	private String tripType; // ONE_WAY or ROUND_TRIP
-	private Integer passengers; // default = 1
-	private String classType; // ECONOMY/BUSINESS/FIRST
+	private String tripType;
+	private Integer passengers; 
+	private String classType; 
 	private Filter filters;
 }
 
